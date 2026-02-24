@@ -1,0 +1,115 @@
+#Необходимая Библиотека 
+import pandas as pd
+import numpy as np
+#Ссылка
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"
+
+df = pd.read_csv('adult.data', header=None)
+df.columns = ['age', 'workclass', 'fnlwgt', 
+              'education', 'education_num', 
+              'marital_status', 'occupation', 
+              'relationship', 'race', 'sex', 
+              'capital_gain', 'capital_loss', 
+              'hours_per_week', 'native_country', 
+              'income']
+df.head()
+
+
+age	workclass	fnlwgt	education	education_num	marital_status	occupation	relationship	race	sex	capital_gain	capital_loss	hours_per_week	native_country	income
+39	State-gov	77516	Bachelors	13	Never-married	Adm-clerical	Not-in-family	White	Male	2174	0	40	United-States	<=50K
+50	Self-emp-not-inc	83311	Bachelors	13	Married-civ-spouse	Exec-managerial	Husband	White	Male	0	0	13	United-States	<=50K
+38	Private	215646	HS-grad	9	Divorced	Handlers-cleaners	Not-in-family	White	Male	0	0	40	United-States	<=50K
+53	Private	234721	11th	7	Married-civ-spouse	Handlers-cleaners	Husband	Black	Male	0	0	40	United-States	<=50K
+28	Private	338409	Bachelors	13	Married-civ-spouse	Prof-specialty	Wife	Black	Female	0	0	40	Cuba	<=50K
+
+print("1) Число столбцов:", df.shape[1])
+     
+1) Число столбцов: 15 
+
+2) Пропуски по столбцам:
+
+print("2) ПРОПУЩЕННЫЕ ДАННЫЕ:")
+missing_data = df.isnull().sum()
+missing_columns = missing_data[missing_data > 0]
+
+if len(missing_columns) == 0:
+    print("Пропусков нет")
+else:
+    print(f"    Найдено в {len(missing_columns)} столбцах:")
+    for col, count in missing_columns.items():
+        print(f" - {col}: {count} пропусков")
+print()
+ПРОПУЩЕННЫЕ ДАННЫЕ:
+workclass         1836
+occupation        1843
+native-country     583
+
+3)print('Ответ:', len(df['race'].unique()))
+
+Ответ:5
+
+4)print('Ответ:', (df['hours_per_week'].median()))
+
+Ответ:40
+
+5) Кого больше - женщин или мужчин с ЗП >50К?
+
+income = df['income'] == ' >50K'
+men = df[income]['sex'].value_counts()[' Male']
+print('Количество Mужчин: ', men)
+women = df[income]['sex'].value_counts()[' Female']
+print('Количество Женщин: ', women)
+if men > women:
+    print('Ответ: У мужчин больше.')
+elif women > men:
+    print('Ответ: У женщин больше.')
+else:
+    print('ЗП одинаковые')
+Количество Mужчин:  6662
+Количество Женщин:  1179
+Ответ: У мужчин больше.
+
+6)Пропущенные данные
+
+ex6 = ['age', 'workclass', 'education']
+for col in ex6:
+    mode_val = df[col].mode()[0]
+    print(f"Мода {col}: {mode_val}")
+    df[col].fillna(mode_val, inplace=True)
+
+Мода age :  36
+Мода workclass :   Private
+Мода education :   HS-grad
+
+print("6) Заполнение пропусков")
+print(df.isnull().sum())
+age               0
+workclass         0
+fnlwgt            0
+education         0
+education_num     0
+marital_status    0
+occupation        0
+relationship      0
+race              0
+sex               0
+capital_gain      0
+capital_loss      0
+hours_per_week    0
+native_country    0
+income            0
+Пропусков нет
+
+
+
+
+
+
+
+
+
+
+
+
+
+
